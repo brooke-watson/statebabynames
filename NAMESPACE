@@ -2,6 +2,7 @@
 
 export(map_babynames)
 import(dplyr)
+import(gganimate)
 import(ggplot2)
 importFrom(scales,wrap_format)
 importFrom(tibble,tibble)

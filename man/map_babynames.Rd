@@ -4,16 +4,28 @@
 \alias{map_babynames}
 \title{Adding a color to the background.}
 \usage{
-map_babynames(name, start_year = 1910, stop_year = 2016, fancy = FALSE)
+map_babynames(nam, filename = NULL, start_year = 2000, stop_year = 2016,
+  raleway = FALSE, ani.width = 560, ani.height = 360, interval = 0.2,
+  ...)
 }
 \arguments{
+\item{filename, }{the file to save the plot to. if NULL, defaults to {nam parameter}.gif"}
+
+\item{start_year, }{first year to include names. must be between 1910 and 2016. defaults to 2000 to avoid accidentally making a huge plot.}
+
+\item{stop_year, }{last year to include names. must be between 1910 and 2016. defaults to 2016.}
+
+\item{raleway, }{whether or not to change the plot font to Raleway and use theme_fancy() to add background color. needs the google Raleway font downloaded to work (https://fonts.google.com/specimen/Raleway). Defaults to false.}
+
+\item{ani.width, }{width of the animation, passed to gganimate}
+
+\item{ani.height, }{height of the animation, passed to gganimate}
+
+\item{interval, }{time in seconds spent on each frame, passed to gganimate}
+
+\item{..., }{other args passed to gganimate}
+
 \item{name, }{name to generate a plot for}
-
-\item{start_year, }{first year to include names. must be between 1910 and 2016}
-
-\item{stop_year, }{last year to include names. must be between 1910 and 2016}
-
-\item{fancy, }{whether or not to change the plot font to Raleway and use theme_fancy() to add background color. needs the google Raleway font downloaded to work (https://fonts.google.com/specimen/Raleway). Defaults to false.}
 }
 \description{
 Adding a color to the background.
