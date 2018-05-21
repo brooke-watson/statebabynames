@@ -9,17 +9,9 @@
 #' @param fancy, whether or not to change the plot font to Raleway and use theme_fancy() to add background color. needs the google Raleway font downloaded to work (https://fonts.google.com/specimen/Raleway). Defaults to false.
 #'
 #' @export
-#'
-#'
-nam = "Brooke"
-start_year = 1991
-stop_year = 1992
-?exists
-data("statebabynames")
-
-exists("statebabynames", envir = globalenv())
-
-map_babynames <- function(nam, start_year = 1910, stop_year = 2016, fancy = FALSE) {
+map_babynames <- function(nam, start_year = 1910, stop_year = 2016, fancy = FALSE, filename = NULL, ...) {
+    library(ggplot2)
+    library(dplyr)
 
     wrap90 <- scales::wrap_format(90)
 
@@ -62,10 +54,16 @@ map_babynames <- function(nam, start_year = 1910, stop_year = 2016, fancy = FALS
 
         g <- g + theme_blank(element_text(family = "Raleway")) + theme_fancy()
     }
-    return(g)
-}
 
-gganimate::gganimate(g, "statebabynames.gif", ani.width = 560, ani.height = 360, interval = .2)
+    if(is.null(filename)) {
+        path <- paste(nam, ".gif")
+    } else if(!grepl(".gif$", "filename.gif")) {
+        path <- paste(filename, ".gif")
+    } else  {path <- filename}
+
+    gganimate::gganimate(g, path)
+}
+map_babynames("Brooke", 1980, 1985, filename = "test.gif", ani.width = 560, ani.height = 360, interval = .2)
 
 g <- map_babynames("Brooke")
 
