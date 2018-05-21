@@ -4,20 +4,27 @@
 #' @importFrom scales wrap_format
 #'
 #' @param name, name to generate a plot for
-#' @param start_year, first year to include names. must be between 1910 and 2016
-#' @param stop_year, last year to include names. must be between 1910 and 2016
-#' @param fancy, whether or not to change the plot font to Raleway and use theme_fancy() to add background color. needs the google Raleway font downloaded to work (https://fonts.google.com/specimen/Raleway). Defaults to false.
+#' @param filename, the file to save the plot to. if NULL, defaults to {nam parameter}.gif"
+#' @param start_year, first year to include names. must be between 1910 and 2016. defaults to 2000 to avoid accidentally making a huge plot.
+#' @param stop_year, last year to include names. must be between 1910 and 2016. defaults to 2016.
+#' @param raleway, whether or not to change the plot font to Raleway and use theme_fancy() to add background color. needs the google Raleway font downloaded to work (https://fonts.google.com/specimen/Raleway). Defaults to false.
+#' @param ani.width, width of the animation, passed to gganimate
+#' @param ani.height, height of the animation, passed to gganimate
+#' @param interval, time in seconds spent on each frame, passed to gganimate
+#' @param ..., other args passed to gganimate
 #'
 #' @export
-map_babynames <- function(nam, start_year = 1910, stop_year = 2016, fancy = FALSE, filename = NULL, ...) {
+map_babynames <- function(nam, filename = NULL, start_year = 2000, stop_year = 2016, raleway = FALSE,
+                          ani.width = 560, ani.height = 360, interval = .2, ...) {
     library(ggplot2)
     library(dplyr)
 
     wrap90 <- scales::wrap_format(90)
 
-    if(!exists("statebabynames", envir = globalenv())) {data("statebabynames")}
+    # if(!exists("statebabynames", envir = globalenv())) {data("statebabynames")}
 
-    namedf <- filter(statebabynames, name == nam)
+    namedf <- statebabynames %>%
+    filter(name == nam & year >= start_year & year <= stop_year)
 
     statebabynames <- statebabynames %>%
         select(state, year) %>%
@@ -48,10 +55,9 @@ map_babynames <- function(nam, start_year = 1910, stop_year = 2016, fancy = FALS
             plot.subtitle = element_text(size = 12, hjust = .5, vjust = -2, color = "#4e4d47"),
             axis.text = element_blank())
 
-    if(fancy == TRUE) {
+    if(raleway == TRUE) {
         library(bplots) # devtools::install_github("brooke-watson/bplots)
         # download the raleway font for theme_raleway() to work: https://fonts.google.com/?selection.family=Raleway
-
         g <- g + theme_blank(element_text(family = "Raleway")) + theme_fancy()
     }
 
@@ -61,10 +67,5 @@ map_babynames <- function(nam, start_year = 1910, stop_year = 2016, fancy = FALS
         path <- paste(filename, ".gif")
     } else  {path <- filename}
 
-    gganimate::gganimate(g, path)
+    gganimate::gganimate(g, path, ani.width = 560, ani.height = 360, interval = .2, ...)
 }
-map_babynames("Brooke", 1980, 1985, filename = "test.gif", ani.width = 560, ani.height = 360, interval = .2)
-
-g <- map_babynames("Brooke")
-
-exists(statebabynames)
